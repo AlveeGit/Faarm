@@ -1,21 +1,11 @@
-import {
-  Cart,
-  Footer,
-  FooterBanner,
-  HeroBanner,
-  Layout,
-  Navbar,
-  Product,
-} from "../components";
+import { FooterBanner, HeroBanner, Product } from "../components";
 
 import { client } from "../lib/client";
 
-
-const Home = ({ products, bannerData}) => {
+const Home = ({ products, bannerData }) => {
   return (
     <div>
       <HeroBanner heroBanner={bannerData.length && bannerData[0]} />
-      {console.log(bannerData)}
       <div className="products-heading">
         <h2> Best Selling Products</h2>
         <p>Fresh Vegetables for Better Health</p>
@@ -40,6 +30,6 @@ export const getServerSideProps = async () => {
   const bannerData = await client.fetch(bannerQuery);
 
   return {
-    props: { products, bannerData }
-  }
+    props: { products, bannerData },
+  };
 };

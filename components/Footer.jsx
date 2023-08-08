@@ -1,6 +1,14 @@
+import { AiOutlineTwitter, AiFillInstagram } from "react-icons/ai";
+
 const Footer = () => {
   return (
-    <div>Footer</div>
-  )
-}
-export default Footer
+  <div className="footer-container">
+    <p>2023 CPL All rights reserved</p>
+    <p className="icons">
+      <AiFillInstagram />
+      <AiOutlineTwitter />
+    </p>
+  </div>
+  );
+};
+export default Footer;
