@@ -25,7 +25,10 @@ const Product = ({ product: { image, slug, price, name } }) => {
           />
 
           <p className="product-name">{name}</p>
-          <p className="product-price">${price}</p>
+          <div className="flex items-center justify-between">
+            <p className="product-price">${price}</p>
+            <span className="font-bold">See Details</span>
+          </div>
         </div>
       </Link>
     </div>
