@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
 import { useRef } from "react";
-import { toast } from "react-hot-toast";
+import Link from "next/link";
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -9,21 +8,58 @@ import {
   AiOutlineShopping,
 } from "react-icons/ai";
 import { TiDeleteOutline } from "react-icons/ti";
+import { toast } from "react-hot-toast";
+
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../lib/client";
 
+import getStripe from "../lib/getStripe";
+
 const Cart = () => {
-  const cartref = useRef();
+  const cartRef = useRef();
   const {
-    setShowcart,
     totalPrice,
     totalQuantities,
     cartItems,
+    setShowcart,
     toggleCartItemQuantity,
+    onRemove,
   } = useStateContext();
 
+  const handleCheckout = async () => {
+    const stripe = await getStripe();
+
+    const response = await fetch("/api/stripe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cartItems),
+    });
+
+    console.log(response);
+
+    if (response.statusCode === 500) return;
+
+    const data = await response.json();
+
+    toast.loading("Redirecting...");
+
+    stripe.redirectToCheckout({
+      sessionId: data.id,
+    });
+  };
+
+  // const showCartItems = () => {
+  //   console.log(cartItems);
+  // };
+
   return (
-    <div className="cart-wrapper ref={cartref}">
+    <div className="cart-wrapper" ref={cartRef}>
+      {/* <button type="button" className="btn" onClick={showCartItems}>
+        Show Cart Items Array
+      </button> */}
+
       <div className="cart-container">
         <button
           type="button"
@@ -78,7 +114,7 @@ const Cart = () => {
                         >
                           <AiOutlineMinus />
                         </span>
-                        <span className="num">0</span>
+                        <span className="num">{item.quantity}</span>
                         <span
                           className="plus"
                           onClick={() =>
@@ -90,7 +126,11 @@ const Cart = () => {
                       </p>
                     </div>
 
-                    <button type="button" className="remove-item" onClick="">
+                    <button
+                      type="button"
+                      className="remove-item"
+                      onClick={() => onRemove(item)}
+                    >
                       <TiDeleteOutline />
                     </button>
                   </div>
@@ -106,7 +146,7 @@ const Cart = () => {
               <h3>${totalPrice}</h3>
             </div>
             <div className="btn-container">
-              <button type="button" className="btn" onClick="">
+              <button type="button" className="btn" onClick={handleCheckout}>
                 Pay with Stripe
               </button>
             </div>

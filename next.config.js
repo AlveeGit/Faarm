@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: false,
 }
 
-// module.exports = nextConfig
+module.exports = nextConfig;
 
 module.exports = {
   images: {
@@ -16,6 +16,4 @@ module.exports = {
       },
     ],
   },
-
-  nextConfig,
 };

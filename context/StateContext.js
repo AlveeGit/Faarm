@@ -11,26 +11,28 @@ export const StateContext = ({ children }) => {
   const [qty, setQty] = useState(1);
 
   let foundProduct;
+  let checkProductInCart;
   let index;
 
   const onAdd = (product, quantity) => {
-    const checkProductInCart = cartItems.find(
-      (item) => item._id === product._id
-    );
+    checkProductInCart = cartItems.find((item) => item._id === product._id);
 
     setTotalPrice(
       (prevTotalPrice) => prevTotalPrice + product.price * quantity
     );
+
     setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
 
     if (checkProductInCart) {
       const updatedCartItems = cartItems.map((cartProduct) => {
-        if (cartProduct._id === product._id)
+        if (cartProduct._id === product._id) {
           return {
             ...cartProduct,
             quantity: cartProduct.quantity + quantity,
           };
+        }
       });
+
       setCartItems(updatedCartItems);
     } else {
       product.quantity = quantity;
@@ -43,11 +45,14 @@ export const StateContext = ({ children }) => {
     foundProduct = cartItems.find((item) => item._id === product._id);
     const newCartItems = cartItems.filter((item) => item._id !== product._id);
     setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice - foundProduct.price * foundProduct.quantity
-    )
-    setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - foundProduct.quantity);
+      (prevTotalPrice) =>
+        prevTotalPrice - foundProduct.price * foundProduct.quantity
+    );
+    setTotalQuantities(
+      (prevTotalQuantities) => prevTotalQuantities - foundProduct.quantity
+    );
     setCartItems(newCartItems);
-  }
+  };
 
   const toggleCartItemQuantity = (id, value) => {
     foundProduct = cartItems.find((item) => item._id === id);

@@ -1,26 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import { Product } from "@/components";
-import { client, urlFor } from "../../lib/client";
 import {
   AiOutlineMinus,
   AiOutlinePlus,
   AiFillStar,
   AiOutlineStar,
 } from "react-icons/ai";
-import {useStateContext} from "../../context/StateContext";
+
+import { client, urlFor } from "../../lib/client";
+import Product from "../../components/Product";
+import { useStateContext } from "../../context/StateContext";
 
 const ProductDetails = ({ product, products }) => {
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
-  const { decQty, incQty, qty ,onAdd} = useStateContext();
+  const { decQty, incQty, qty, onAdd } = useStateContext();
 
   return (
     <div>
       <div className="product-detail-container">
         <div>
           <div className="image-container">
-            <img src={urlFor(image && image[index])} alt="" className="product-detail-image" />
+            <img
+              src={urlFor(image && image[index])}
+              alt=""
+              className="product-detail-image"
+            />
           </div>
 
           <div className="small-images-container">
@@ -70,7 +75,11 @@ const ProductDetails = ({ product, products }) => {
           </div>
 
           <div className="buttons">
-            <button type="button" className="add-to-cart" onClick={() => onAdd(product, qty)}>
+            <button
+              type="button"
+              className="add-to-cart"
+              onClick={() => onAdd(product, qty)}
+            >
               Add to Cart
             </button>
             <button type="button" className="buy-now" onClick="">
@@ -93,7 +102,6 @@ const ProductDetails = ({ product, products }) => {
     </div>
   );
 };
-export default ProductDetails;
 
 export const getStaticPaths = async () => {
   const query = `*[_type == "product"] {
@@ -122,6 +130,8 @@ export const getStaticProps = async ({ params: { slug } }) => {
   const products = await client.fetch(productsQuery);
 
   return {
-    props: { product, products },
+    props: { products, product },
   };
 };
+
+export default ProductDetails;
