@@ -18,7 +18,7 @@ const Product = ({ product: { image, slug, price, name } }) => {
             alt="product"
             className="product-image"
             placeholder="blur"
-            blurDataURL="/public/assets/images/blur.jpg"
+            blurDataURL="/assets/images/blur.jpg"
             onError={() => {
               setSrc("/assets/images/error.jpg");
             }}

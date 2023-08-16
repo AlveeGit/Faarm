@@ -3,19 +3,20 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  console.log(req.body.cartItems);
-
   if (req.method === "POST") {
+    console.log(req.body);
     try {
+      // console.log("first try");
       const params = {
         submit_type: "pay",
         mode: "payment",
         payment_method_types: ["card"],
         billing_address_collection: "auto",
         shipping_options: [
-          { shipping_rate: "shr_1NeyhsElB2SPC88S1CdSUjqQ" },
-          { shipping_rate: "shr_1NeyjYElB2SPC88SoMlGtJNW" },
+          { shipping_rate: "shr_1NfgAhElB2SPC88SDLbQlrg4" },
+          { shipping_rate: "shr_1NfgCvElB2SPC88SNizuPHw5" },
         ],
+
         line_items: req.body.map((item) => {
           const img = item.image[0].asset._ref;
           const newImage = img
@@ -23,8 +24,7 @@ export default async function handler(req, res) {
               "image-",
               "https://cdn.sanity.io/images/plhqihsv/production/"
             )
-            .replace("-webp", ".webp");
-
+            .replace("-jpg", ".jpg");
           return {
             price_data: {
               currency: "bdt",
@@ -41,23 +41,20 @@ export default async function handler(req, res) {
             quantity: item.quantity,
           };
         }),
+
         success_url: `${req.headers.origin}/success`,
-        cancel_url: `${req.headers.origin}/canceled`,
+        cancel_url: `${req.headers.origin}/?canceled=true`,
       };
 
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create(params);
-
       res.status(200).json(session);
-
-      console.log("in try");
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
-      console.log(err);
     }
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
-    console.log("in else");
+    // console.log("in else block");
   }
 }

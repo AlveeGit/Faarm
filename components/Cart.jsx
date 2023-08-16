@@ -27,6 +27,7 @@ const Cart = () => {
   } = useStateContext();
 
   const handleCheckout = async () => {
+    // console.log(cartItems);
     const stripe = await getStripe();
 
     const response = await fetch("/api/stripe", {
@@ -37,11 +38,12 @@ const Cart = () => {
       body: JSON.stringify(cartItems),
     });
 
-    console.log(response);
+    // console.log(response);
 
     if (response.statusCode === 500) return;
 
     const data = await response.json();
+    console.log(data)
 
     toast.loading("Redirecting...");
 
@@ -50,16 +52,8 @@ const Cart = () => {
     });
   };
 
-  // const showCartItems = () => {
-  //   console.log(cartItems);
-  // };
-
   return (
     <div className="cart-wrapper" ref={cartRef}>
-      {/* <button type="button" className="btn" onClick={showCartItems}>
-        Show Cart Items Array
-      </button> */}
-
       <div className="cart-container">
         <button
           type="button"
@@ -146,7 +140,11 @@ const Cart = () => {
               <h3>${totalPrice}</h3>
             </div>
             <div className="btn-container">
-              <button type="button" className="btn" onClick={handleCheckout}>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => handleCheckout()}
+              >
                 Pay with Stripe
               </button>
             </div>
