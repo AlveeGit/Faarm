@@ -5,6 +5,7 @@ import  {useStateContext}  from "../context/StateContext";
 
 const Navbar = () => {
   const { showcart, totalQuantities, setShowcart } = useStateContext();
+  const isAuth = false;
 
   return (
     <div className="navbar-container">
@@ -12,11 +13,18 @@ const Navbar = () => {
         <Link href="/">Faarm Connect</Link>
       </p>
       <p className="logo">
-        <Link href="/user">User</Link>
+        <Link href="/sign-up">User</Link>
       </p>
       <p className="logo">
         <Link href="/contact">Contact</Link>
       </p>
+
+      {isAuth &&
+        <p>
+          <button>Logout</button>
+        </p>
+      }
+
       <button
         className="cart-icon"
         type="button"

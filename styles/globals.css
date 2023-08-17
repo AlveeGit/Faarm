@@ -140,7 +140,7 @@ span.text-red {
   color: black;
 }
 
-/* User CSS */
+/* sing-up CSS */
 .loginSec {
   height: 430px;
   background: rgb(206, 206, 206);
@@ -149,7 +149,7 @@ span.text-red {
   transition: 0.8s ease-in-out;
 }
 #chk:checked ~ .loginSec {
-  transform: translateY(-300px);
+  transform: translateY(-310px);
 }
 
 #chk {
