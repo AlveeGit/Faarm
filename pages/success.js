@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { BsBagCheckFill } from "react-icons/bs";
 import Link from "next/link";
@@ -8,6 +9,9 @@ const Success = () => {
 
   useEffect(() => {
     localStorage.clear();
+    setCartItems([]);
+    setTotalPrice(0);
+    setTotalQuantities(0);
   },[]);
 
   return (
