@@ -11,34 +11,49 @@ export const StateContext = ({ children }) => {
   const [qty, setQty] = useState(1);
 
   let foundProduct;
-  // let checkProductInCart;
+  let checkProductInCart;
   let index;
 
   const onAdd = (product, quantity) => {
-    const checkProductInCart = cartItems.find(
+    checkProductInCart = cartItems.find(
       (item) => item._id === product._id
     );
 
-    setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice + product.price * quantity
-    );
-
-    setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
-
     if (checkProductInCart) {
+
       const updatedCartItems = cartItems.map((cartProduct) => {
         if (cartProduct._id === product._id) {
           return {
             ...cartProduct,
-            quantity: cartProduct.quantity + quantity,
+            quantity: quantity,
           };
         }
       });
 
       setCartItems(updatedCartItems);
-    } else {
+
+      setTotalPrice(
+        (prevTotalPrice) =>
+          prevTotalPrice + product.price * quantity - checkProductInCart.price * checkProductInCart.quantity
+      );
+
+      setTotalQuantities(
+        (prevTotalQuantities) => prevTotalQuantities + quantity - checkProductInCart.quantity
+      );
+    } 
+    
+    else {
       product.quantity = quantity;
       setCartItems([...cartItems, { ...product }]);
+
+      setTotalPrice(
+        (prevTotalPrice) => prevTotalPrice + product.price * quantity
+      );
+
+      setTotalQuantities(
+        (prevTotalQuantities) => prevTotalQuantities + quantity
+      );
+      
     }
     toast.success(`${qty} ${product.name} added to the cart.`);
   };
