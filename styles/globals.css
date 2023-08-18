@@ -141,15 +141,16 @@ span.text-red {
 }
 
 /* sing-up CSS */
+
 .loginSec {
-  height: 430px;
+  height: 540px;
   background: rgb(206, 206, 206);
   border-radius: 60% / 10%;
-  transform: translateY(20px);
+  transform: translateY(15px);
   transition: 0.8s ease-in-out;
 }
 #chk:checked ~ .loginSec {
-  transform: translateY(-310px);
+  transform: translateY(-400px);
 }
 
 #chk {

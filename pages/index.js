@@ -1,6 +1,8 @@
+
 import { FooterBanner, HeroBanner, Product } from "../components";
 
 import { client } from "../lib/client";
+
 
 const Home = ({ products, bannerData }) => {
   return (
@@ -33,3 +35,4 @@ export const getServerSideProps = async () => {
     props: { products, bannerData },
   };
 };
+

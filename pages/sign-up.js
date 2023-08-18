@@ -1,43 +1,57 @@
-// import styles from "../styles/UserStyle.module.css";
-// import Input from "../components/Input";
-
-"use client";
 import { useState } from "react";
 import InputField from "../components/Data/InputField";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { loginUser } from "../utils/utilities";
+
 
 const SignUp = () => {
-  const [busy, setBusy] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    name: "",
+  const [data, setData] = useState({
+    fullName: "",
     email: "",
     password: "",
-    // role: "user",
+    confirmPassword: "",
   });
-  const { name, email, password } = userInfo;
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]:value });
+  const handleInputChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    setBusy(true);
-    e.preventDefault();
-    const res = await fetch("/api/auth/users/route", {
-      method: "POST",
-      body: JSON.stringify(userInfo),
-    }).then((res) => res.json());
-    console.log(res);
-    setBusy(false);
+  const handleSignup = async (event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      const apiRes = await axios.post(
+        "http://localhost:3000/api/auth/signup",
+        data
+      );
+      if (apiRes?.data?.success) {
+        const loginRes = await loginUser({
+          email: data.email,
+          password: data.password,
+        });
+
+        if (loginRes && !loginRes.ok) {
+          console.log("error in login", loginRes);
+        } else {
+          router.push("/");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
   };
 
   return (
     <div className="bg-gradient-to-b from-[#02001c] to-[#c3c3c3] h-screen flex  items-center">
-      <div className="  bg-gradient-to-b from-[#dbd9ee] to-[#0d0025] h-[510px] w-[400px] mx-auto shadow-xl shadow-indigo-500/40 overflow-hidden border rounded-lg ">
+      <div className="  bg-gradient-to-b from-[#dbd9ee] to-[#0d0025] h-[600px] w-[400px] mx-auto shadow-xl shadow-indigo-500/40 overflow-hidden border rounded-lg ">
         <input type="checkbox" id="chk" />
 
         <div className="relative">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSignup}>
             <label
               for="chk"
               className="text-3xl text-black font-bold m-10 flex cursor-pointer justify-center"
@@ -45,38 +59,44 @@ const SignUp = () => {
               Sign Up
             </label>
 
-            
-
             <div className=" flex flex-col w-full place-items-center ">
               <InputField
-                label="Name"
-                name="name"
-                value={name}
-                placeholder="Name"
-                onChange={handleChange}
+                type="text"
+                placeholder={"Full Name"}
+                value={data.fullName}
+                name="fullName"
+                onChange={handleInputChange}
+                required
               />
               <InputField
-                label="Email"
                 type="email"
+                placeholder={"Email"}
+                value={data.email}
                 name="email"
-                value={email}
-                placeholder="Email"
-                onChange={handleChange}
+                onChange={handleInputChange}
+                required
               />
               <InputField
-                label="Password"
                 type="password"
+                placeholder={"Password"}
+                value={data.password}
                 name="password"
-                value={password}
-                placeholder="Password"
-                onChange={handleChange}
+                onChange={handleInputChange}
+                required
+              />
+              <InputField
+                type="password"
+                placeholder={"Confirm Password"}
+                value={data.confirmPassword}
+                name="confirmPassword"
+                onChange={handleInputChange}
+                required
               />
             </div>
             <button
               type="submit"
               className="bg-black text-white  rounded-lg button1 "
-              disabled={busy}
-              style={{opacity: busy ? 0.5 : 1}}
+              disabled={loading}
             >
               Sign Up
             </button>
@@ -86,7 +106,6 @@ const SignUp = () => {
         <div id="loginSection" className="loginSec">
           <form>
             <label
-              // htmlFor="chk"
               for="chk"
               className="text-3xl text-black font-bold  p-5 flex cursor-pointer justify-center"
             >
@@ -95,20 +114,20 @@ const SignUp = () => {
 
             <div className=" flex flex-col w-full place-items-center ">
               <InputField
-                label="Email"
                 type="email"
+                placeholder={"Email"}
+                value={data.email}
                 name="email"
-                value={email}
-                placeholder="Email"
-                onChange={handleChange}
+                onChange={handleInputChange}
+                required
               />
               <InputField
-                label="Password"
                 type="password"
+                placeholder={"Password"}
+                value={data.password}
                 name="password"
-                value={password}
-                placeholder="Password"
-                onChange={handleChange}
+                onChange={handleInputChange}
+                required
               />
               <button className="bg-black text-white p-2 rounded-lg button1">
                 Log In

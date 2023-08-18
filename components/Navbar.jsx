@@ -3,9 +3,12 @@ import { AiOutlineShopping } from "react-icons/ai";
 import Cart from "./Cart";
 import  {useStateContext}  from "../context/StateContext";
 
+import { useSession } from "next-auth/react";
+
 const Navbar = () => {
   const { showcart, totalQuantities, setShowcart } = useStateContext();
-  const isAuth = false;
+
+  const { data: session } = useSession();
 
   return (
     <div className="navbar-container">
@@ -19,10 +22,12 @@ const Navbar = () => {
         <Link href="/contact">Contact</Link>
       </p>
 
-      {isAuth &&
-        <p>
-          <button>Logout</button>
-        </p>
+      {
+        session ? (
+          <Link href="/sign-up">Si</Link>
+        ):(
+          <Link href="/sign-up">Sign Up</Link>
+        )
       }
 
       <button
