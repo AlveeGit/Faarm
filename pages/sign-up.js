@@ -4,7 +4,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { loginUser } from "../utils/utilities";
 
-
 const SignUp = () => {
   const [data, setData] = useState({
     fullName: "",
@@ -12,11 +11,24 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [signinEmail, setSigninEmail] = useState("");
+  const [signinPassword, setSigninPassword] = useState("");
+
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleInputChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleEmailChange = (event) => {
+    setSigninEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setSigninPassword(event.target.value);
   };
 
   const handleSignup = async (event) => {
@@ -27,6 +39,7 @@ const SignUp = () => {
         "http://localhost:3000/api/auth/signup",
         data
       );
+
       if (apiRes?.data?.success) {
         const loginRes = await loginUser({
           email: data.email,
@@ -34,10 +47,28 @@ const SignUp = () => {
         });
 
         if (loginRes && !loginRes.ok) {
-          console.log("error in login", loginRes);
+          console.log("error in SignUp", loginRes);
         } else {
           router.push("/");
         }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const handleSingIn = async (event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      const loginRes = await loginUser({ 
+        email: signinEmail, 
+        password: signinPassword });
+      if (loginRes && !loginRes.ok) {
+        console.log("error in SignIN", loginRes);
+      } else {
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -104,32 +135,36 @@ const SignUp = () => {
         </div>
 
         <div id="loginSection" className="loginSec">
-          <form>
+          <form onSubmit={handleSingIn}>
             <label
               for="chk"
               className="text-3xl text-black font-bold  p-5 flex cursor-pointer justify-center"
             >
-              Log In
+              Sign In
             </label>
 
             <div className=" flex flex-col w-full place-items-center ">
               <InputField
                 type="email"
                 placeholder={"Email"}
-                value={data.email}
+                value={ signinEmail}
                 name="email"
-                onChange={handleInputChange}
+                onChange={handleEmailChange}
                 required
               />
               <InputField
                 type="password"
                 placeholder={"Password"}
-                value={data.password}
+                value={signinPassword}
                 name="password"
-                onChange={handleInputChange}
+                onChange={handlePasswordChange}
                 required
               />
-              <button className="bg-black text-white p-2 rounded-lg button1">
+              <button
+                type="submit"
+                className="bg-black text-white p-2 rounded-lg button1"
+                disabled={loading}
+              >
                 Log In
               </button>
             </div>

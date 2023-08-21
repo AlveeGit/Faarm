@@ -36,10 +36,73 @@ a {
 .navbar-container {
   display: flex;
   justify-content: space-between;
-  margin: 6px 18px;
+  margin: 6px 18px; 
   position: relative;
   padding-bottom: 18px;
 }
+
+.menu {
+  display: none;
+}
+
+.open {
+  display: block;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navList li {
+  margin-right: 20px;
+}
+
+.navList a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s ease-in-out;
+}
+
+.navList a:hover {
+  color: #ff9900;
+}
+
+.menuToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggleIcon {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.menuToggle.open .toggleIcon {
+  transform: rotate(-45deg);
+}
+
+.menuToggle.open .toggleIcon:before,
+.menuToggle.open .toggleIcon:after {
+  top: 0;
+  transform: rotate(90deg);
+}
+
+.menuToggle.open .toggleIcon:before {
+  top: 10px;
+}
+
+.menuToggle.open .toggleIcon:after {
+  top: -10px;
+}
+
 .marquee-text {
   font-size: 29px;
   font-weight: 600;

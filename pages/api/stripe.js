@@ -4,9 +4,9 @@ const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    console.log(req.body);
+    
     try {
-      // console.log("first try");
+  
       const params = {
         submit_type: "pay",
         mode: "payment",
@@ -55,6 +55,6 @@ export default async function handler(req, res) {
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
-    // console.log("in else block");
+
   }
 }
