@@ -39,7 +39,7 @@ const handler = async (req, res) => {
 
         return res.status(201).json({
           success: true,
-          user,
+          user
         });
       }
     } catch (error) {

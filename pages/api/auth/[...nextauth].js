@@ -6,9 +6,7 @@ import User from "../../../models/user";
 
 const options = {
   providers: [
-    
     CredentialsProvider({
-
       id: "credentials",
       name: "Credentials",
 
@@ -18,21 +16,13 @@ const options = {
       },
 
       async authorize(credentials) {
-
-
-
         await connectToMongoDB().catch((err) => {
           throw new Error(err);
         });
 
-        
-
         const user = await User.findOne({
           email: credentials?.email,
         }).select("+password");
-
-       
-        
 
         if (!user) {
           throw new Error("user not found");

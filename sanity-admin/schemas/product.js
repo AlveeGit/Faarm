@@ -35,6 +35,12 @@ export default {
       name: 'details',
       title: 'Details',
       type: 'string',
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
     }
+
   ]
 }

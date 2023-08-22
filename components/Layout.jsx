@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <header>
+      <header >
         <Navbar />
       </header>
 

@@ -6,73 +6,160 @@ import { useStateContext } from "../context/StateContext";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 
-const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(true);
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+  NavbarMenuToggle,
+  NavbarMenu,
+  Dropdown,
+  DropdownTrigger,
+  Avatar,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+const NavBar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { showcart, totalQuantities, setShowcart } = useStateContext();
 
   const { data: session } = useSession();
 
+  const categories = ["Groceries", "Rices", "Spices", "Vegetables"];
+
   return (
-    <div className="navbar-container">
-      <p className="logo">
-        <Link href="/">Faarm Connect</Link>
-      </p>
+    <Navbar isBordered maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent justify="">
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="sm:hidden"
+        />
+        <NavbarBrand>
+          {/* //logo */}
+          <Link href="/" className="font-bold text-inherit text-2xl ">
+            Faarm
+          </Link>
+        </NavbarBrand>
+      </NavbarContent>
 
-      <div className={` ${menuOpen ? "open" : ""}`}>
-        <ul className="navList">
-          <li>
-            <Link href="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/about">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="/services">
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact">
-             Contact
-            </Link>
-          </li>
-        </ul>
-      </div>
+      <NavbarContent className="hidden sm:flex gap-4">
+        <NavbarItem isActive>
+          <Link href="/" aria-current="page">
+            Home
+          </Link>
+        </NavbarItem>
 
-      {/* <p className="logo">
-        <Link href="/contact">Contact</Link>
-      </p> */}
+        <NavbarItem>
+          <Link color="foreground" href="/contact">
+            Contact
+          </Link>
+        </NavbarItem>
 
-      {/* {session ? (
-        <div>
-          <Link href="/sign-up">{session?.user?.fullName} </Link>
-          <button className="bg-slate-400" onClick={signOut}>
-            SingOut
-          </button>
-        </div>
-      ) : (
-        <Link href="/sign-up">Sign In</Link>
-      )} */}
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                // endContent={icons.chevron}
+                radius="sm"
+                variant="light"
+              >
+                Categories
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
 
-      <button
-        className="cart-icon"
-        type="button"
-        onClick={() => setShowcart(true)}
-      >
-        <AiOutlineShopping />
-        <span className="cart-item-qty">{totalQuantities}</span>
-      </button>
-      {showcart && <Cart />}
-    </div>
+          <DropdownMenu
+            aria-label="Categories"
+            className="w-[100px]"
+            itemClasses={{
+              base: "gap-0",
+            }}
+          >
+            {categories.map((category) => (
+              <DropdownItem key={category}>
+                <Link href={`/categories/${category}`}>
+                {category}
+                </Link>
+                </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+
+      {session && (
+        <NavbarContent as="div" justify="end">
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                name={session?.user?.fullName}
+                size="sm"
+                src="/assets/images/user.png"
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">{session?.user?.fullName}</p>
+              </DropdownItem>
+              <DropdownItem key="Profile">Dashboard</DropdownItem>
+              <DropdownItem onClick={signOut} key="logout" color="danger">
+                Sign Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarContent>
+      )}
+
+      {!session && (
+        <NavbarContent justify="flex-end">
+          <NavbarItem>
+            <Button as={Link} color="primary" href="/sign-up" variant="flat">
+              Sign in
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      )}
+
+      <NavbarContent justify="flex-end">
+        <button
+          className="cart-icon"
+          type="button"
+          onClick={() => setShowcart(true)}
+        >
+          <AiOutlineShopping />
+          <span className="cart-item-qty">{totalQuantities}</span>
+        </button>
+        {showcart && <Cart />}
+      </NavbarContent>
+
+      <NavbarMenu>
+        <NavbarItem isActive>
+          <Link href="/" aria-current="page">
+            Home
+          </Link>
+        </NavbarItem>
+
+        <NavbarItem>
+          <Link color="foreground" href="/contact">
+            Contact
+          </Link>
+        </NavbarItem>
+
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Categories
+          </Link>
+        </NavbarItem>
+      </NavbarMenu>
+    </Navbar>
   );
 };
-export default Navbar;
+export default NavBar;
